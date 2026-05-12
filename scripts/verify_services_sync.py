@@ -13,7 +13,7 @@ def load_configured_services(config_path: Path) -> list[str]:
 def load_listed_services(readme_path: Path) -> list[str]:
     content = readme_path.read_text(encoding="utf-8")
     services_section = re.search(
-        r"^## Services\s*$([\s\S]*?)(?:^## |\Z)",
+        r"^## Services\s*$([\s\S]*?)(?=^## |\Z)",
         content,
         flags=re.MULTILINE,
     )
@@ -38,8 +38,8 @@ def main() -> int:
         missing_from_readme = sorted(configured_set - listed_set)
         extra_in_readme = sorted(listed_set - configured_set)
         print("README.md service list does not match services.json")
-        print(f"Missing from README: {missing_from_readme}")
-        print(f"Extra in README:     {extra_in_readme}")
+        print(f"Missing from README: {missing_from_readme or 'None'}")
+        print(f"Extra in README:     {extra_in_readme or 'None'}")
         return 1
 
     if configured_services != listed_services:
