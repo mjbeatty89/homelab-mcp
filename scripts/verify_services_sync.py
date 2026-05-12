@@ -31,10 +31,21 @@ def main() -> int:
     configured_services = load_configured_services(repository_root / "services.json")
     listed_services = load_listed_services(repository_root / "README.md")
 
-    if configured_services != listed_services:
+    configured_set = set(configured_services)
+    listed_set = set(listed_services)
+
+    if configured_set != listed_set:
+        missing_from_readme = sorted(configured_set - listed_set)
+        extra_in_readme = sorted(listed_set - configured_set)
         print("README.md service list does not match services.json")
-        print(f"Configured: {configured_services}")
-        print(f"Listed:     {listed_services}")
+        print(f"Missing from README: {missing_from_readme}")
+        print(f"Extra in README:     {extra_in_readme}")
+        return 1
+
+    if configured_services != listed_services:
+        print("README.md service list has the correct services but a different order than services.json")
+        print(f"Configured order: {configured_services}")
+        print(f"README order:     {listed_services}")
         return 1
 
     print("README.md service list matches services.json")
