@@ -1,0 +1,20 @@
+{
+  "_description": "Slim profile for homelab ops. Use when you want the model to operate Proxmox/Docker/Unraid/TrueNAS without distractions.",
+  "mcpServers": {
+    "homelab": {
+      "type": "sse",
+      "url": "${HOMELAB_MCP_URL}",
+      "headers": { "Authorization": "Bearer ${HOMELAB_MCP_TOKEN}" }
+    },
+    "filesystem": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${HOME}/homelab"]
+    },
+    "memory": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"]
+    }
+  }
+}

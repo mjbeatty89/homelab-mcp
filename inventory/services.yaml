@@ -1,0 +1,31 @@
+# MCP servers that make up the homelab-mcp suite.
+#
+# Ordering here is canonical. `services.json` and the README's
+# `## Services` section are derived from this file; CI fails on drift.
+
+services:
+  - name: homelab-mcp
+    description: Aggregator gateway (Cloudflare Worker) fronting all platform servers
+    kind: gateway
+    runtime: cloudflare-worker
+    targets: [proxmox-mcp, docker-mcp, unraid-mcp, truenas-mcp]
+
+  - name: proxmox-mcp
+    description: Proxmox VE — VM/LXC lifecycle, snapshots, migrate, cluster status
+    kind: platform
+    platform: proxmox
+
+  - name: docker-mcp
+    description: Docker / Compose lifecycle and logs on app-hosts
+    kind: platform
+    platform: docker
+
+  - name: unraid-mcp
+    description: Unraid array status, shares, dockerMan, parity
+    kind: platform
+    platform: unraid
+
+  - name: truenas-mcp
+    description: TrueNAS pools, datasets, snapshots, replication
+    kind: platform
+    platform: truenas

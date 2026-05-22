@@ -16,5 +16,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Verify README services match config
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install --quiet -r requirements.txt
+
+      - name: Regenerate services.json from inventory
+        run: python3 scripts/generate_services.py
+
+      - name: Fail if services.json drifted from inventory
+        run: git diff --exit-code services.json
+
+      - name: Verify README services match services.json
         run: python3 scripts/verify_services_sync.py
