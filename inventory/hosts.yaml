@@ -1,0 +1,78 @@
+# Homelab host inventory.
+#
+# Edit this file to add/remove hosts. Addresses below are placeholders
+# (RFC1918 examples) — replace with your real ones, or override at runtime
+# via the gateway's host-config layer if you'd rather not commit them.
+
+hosts:
+  pve-01:
+    platform: proxmox
+    role: hypervisor
+    address: 10.0.10.11
+    transport: { kind: https, port: 8006 }
+    capabilities:
+      - vm.read
+      - vm.lifecycle
+      - lxc.read
+      - lxc.lifecycle
+      - snapshot.read
+      - snapshot.lifecycle
+      - migrate.lifecycle
+      - cluster.status
+    vault_path: kv/homelab/proxmox/pve-01
+    tags: [primary, production]
+
+  pve-02:
+    platform: proxmox
+    role: hypervisor
+    address: 10.0.10.12
+    transport: { kind: https, port: 8006 }
+    capabilities:
+      - vm.read
+      - lxc.read
+      - snapshot.read
+      - cluster.status
+    vault_path: kv/homelab/proxmox/pve-02
+    tags: [secondary]
+
+  unraid-01:
+    platform: unraid
+    role: storage+apps
+    address: 10.0.10.20
+    transport: { kind: graphql, port: 443 }
+    capabilities:
+      - array.status
+      - share.read
+      - docker.read
+      - docker.lifecycle
+      - parity.status
+    vault_path: kv/homelab/unraid/unraid-01
+    tags: [primary]
+
+  truenas-01:
+    platform: truenas
+    role: storage
+    address: 10.0.10.30
+    transport: { kind: websocket, port: 443 }
+    capabilities:
+      - pool.status
+      - dataset.read
+      - dataset.snapshot.lifecycle
+      - replication.read
+      - replication.lifecycle
+    vault_path: kv/homelab/truenas/truenas-01
+    tags: [scale]
+
+  docker-prod:
+    platform: docker
+    role: app-host
+    address: 10.0.10.40
+    transport: { kind: ssh, port: 22, user: mcp }
+    capabilities:
+      - compose.read
+      - compose.lifecycle
+      - container.read
+      - container.logs
+      - image.pull
+    vault_path: kv/homelab/docker/docker-prod
+    tags: [prod]
